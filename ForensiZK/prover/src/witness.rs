@@ -1,21 +1,37 @@
+// use anyhow::Result;
+
+// pub struct Witness {
+//     pub leaf_packed: Vec<Vec<u64>>, // each leaf as packed u64 words
+//     pub indices: Vec<u64>,
+//     pub ts: Vec<u64>,
+// }
+
+// pub fn build_witness(events: &Vec<crate::parser::CanonicalRecord>, packed_leaves: &Vec<Vec<u64>>) -> Result<Witness> {
+//     let mut indices = Vec::new();
+//     let mut ts = Vec::new();
+//     for ev in events.iter() {
+//         indices.push(ev.index as u64);
+//         ts.push(ev.ts);
+//     }
+//     Ok(Witness { leaf_packed: packed_leaves.clone(), indices, ts })
+// }
 
 use anyhow::Result;
+use crate::analyzer::{analyze, Features};
+use crate::parser::CanonicalRecord;
 
-// Very small witness builder: convert canonical records into field-friendly vectors
+#[derive(Debug, Clone)]
 pub struct Witness {
-    pub indices: Vec<u64>,
-    pub ts: Vec<u64>,
-    pub leaf_bytes: Vec<Vec<u8>>
+    pub features: Features,
+    pub timestamps: Vec<u64>,
 }
 
-pub fn build_witness(events: &Vec<crate::parser::CanonicalRecord>, leaves: &Vec<[u8;32]>) -> Result<Witness> {
-    let mut indices = Vec::new();
-    let mut ts = Vec::new();
-    let mut leaf_bytes = Vec::new();
-    for (i, ev) in events.iter().enumerate() {
-        indices.push(ev.index as u64);
-        ts.push(ev.ts);
-        leaf_bytes.push(leaves[i].to_vec());
-    }
-    Ok(Witness { indices, ts, leaf_bytes })
+pub fn build_witness(
+    records: &[CanonicalRecord],
+    leaves: &[u64],
+) -> Result<Witness> {
+    Ok(Witness {
+        features: analyze(records),
+        timestamps: leaves.to_vec(),
+    })
 }

@@ -102,7 +102,9 @@ async function runProver(bin, args, proofId, outProof) {
       }
     });
 
-    proc.stderr.on('data', d => console.error('prover err:', d.toString()));
+    proc.stderr.on('data', d =>
+      console.error('prover err:', d.toString())
+    );
 
     proc.on('close', code => {
       if (code === 0) {
@@ -125,5 +127,6 @@ async function runProver(bin, args, proofId, outProof) {
     });
   });
 }
+
 
 module.exports = { addJob, getStatus };
