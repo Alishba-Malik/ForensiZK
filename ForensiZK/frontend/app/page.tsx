@@ -102,59 +102,213 @@ function ProgressBar({ progress }: { progress: number }) {
 }
 
 /* ----------------------------- Analyze Panel ------------------------------- */
+// function AnalyzePanel(props: any) {
+//   const { file, setFile, uploadAndProve, progress, loading, merkleRoot, verdict, proofBlobUrl, downloadProof, logs } = props;
+//   const filename = proofBlobUrl ? proofBlobUrl.split('/').pop() : null;
+//   return (
+//     <main className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+//       <Card className="p-6">
+//         <div className="flex flex-col gap-4">
+//           <label className="group flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer bg-gradient-to-b from-white/3 to-black/6 hover:from-white/5 hover:scale-[1.01] transition-all">
+//             <Upload className="w-12 h-12 opacity-80 group-hover:animate-bounce" />
+//             <span className="mt-3 text-sm font-medium">Upload Log File (JSON / plain text)</span>
+//             <input className="hidden" type="file" onChange={(e)=> setFile(e.target.files?.[0]||null)} />
+//           </label>
+
+//           {file && <div className="text-sm">Selected: <strong className="font-mono">{file.name}</strong> — {(file.size/1024).toFixed(1)} KB</div>}
+
+//           <div className="grid gap-3">
+//             <Button onClick={uploadAndProve} disabled={!file || loading} className="w-full">
+//               {loading ? (
+//                 <div className="flex items-center gap-2"><RefreshCcw className="animate-spin"/> Processing</div>
+//               ) : (
+//                 <div className="flex items-center gap-2"><ShieldCheck/> Run ZK Analysis</div>
+//               )}
+//             </Button>
+
+//             <div>
+//               <ProgressBar progress={progress} />
+//               <div className="text-xs text-zinc-400 mt-2">Progress: {progress}%</div>
+//             </div>
+
+//             {merkleRoot && (
+//               <div className="mt-2 p-3 rounded bg-white/3">
+//                 <div className="text-xs text-zinc-300">Merkle Root</div>
+//                 <div className="font-mono break-all text-sm">{merkleRoot}</div>
+//               </div>
+//             )}
+
+//             {verdict && (
+//               <div className="mt-2 p-3 rounded bg-white/3">
+//                 <div className="text-sm font-semibold">
+//                   Verdict:
+//                   <span className={`ml-2 ${verdict.compromised ? 'text-rose-400' : 'text-emerald-300'}`}>
+//                     {verdict.compromised ? 'Compromised' : 'Clean'}
+//                   </span>
+//                 </div>
+//                 <div className="text-xs text-zinc-400 mt-1">
+//                   Reason: {verdict.reason || JSON.stringify(verdict)}
+//                 </div>
+//               </div>
+//             )}
+
+//             <div className="flex gap-2">
+//               <Button onClick={downloadProof} disabled={!proofBlobUrl}><Download/> Download Proof</Button>
+//               <Button variant="ghost" onClick={() => { navigator.clipboard.writeText(merkleRoot || ""); }} disabled={!merkleRoot}>
+//                 Copy Root
+//               </Button>
+//             </div>
+//           </div>
+//         </div>
+//       </Card>
+
+//       <Card className="p-6">
+//         <h3 className="font-semibold">Proof Artifacts</h3>
+//         <div className="mt-3 text-sm text-zinc-400">When proof generation finishes you'll see download links and public outputs here.</div>
+
+//         {proofBlobUrl ? (
+//           <div className="mt-4 flex items-center justify-between">
+//             <div className="font-mono truncate max-w-[60%]">{filename}</div>
+//             <Button onClick={downloadProof}>Download</Button>
+//             <Button variant="ghost" onClick={() => { navigator.clipboard.writeText(proofBlobUrl || ""); }}>
+//               Copy Link
+//             </Button>
+//           </div>
+//         ) : (
+//           <div className="mt-4 text-sm text-zinc-400">No proof yet.</div>
+//         )}
+
+//         <div className="mt-6">
+//           <h4 className="font-medium">Live Logs</h4>
+//           <pre className="mt-2 text-xs bg-black/5 p-3 rounded h-48 overflow-auto">
+//             {logs.length === 0
+//               ? '[task] awaiting input...\n[task] uploaded file queued\n[task] building witness...'
+//               : logs.join("\n")}
+//           </pre>
+//         </div>
+//       </Card>
+//     </main>
+//   );
+// }
+
 function AnalyzePanel(props: any) {
-  const { file, setFile, uploadAndProve, progress, loading, merkleRoot, verdict, proofBlobUrl, downloadProof, logs } = props;
+  const {
+    file,
+    setFile,
+    uploadAndProve,
+    progress,
+    loading,
+    merkleRoot,
+    verdict,
+    proofBlobUrl,
+    downloadProof,
+    logs
+  } = props;
+
   const filename = proofBlobUrl ? proofBlobUrl.split('/').pop() : null;
+
   return (
-    <main className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <main className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      {/* LEFT PANEL */}
       <Card className="p-6">
-        <div className="flex flex-col gap-4">
-          <label className="group flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer bg-gradient-to-b from-white/3 to-black/6 hover:from-white/5 hover:scale-[1.01] transition-all">
+        <div className="flex flex-col gap-5">
+
+          {/* Upload */}
+          <label className="group flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer bg-gradient-to-b from-white/3 to-black/6 hover:from-white/5 transition-all">
             <Upload className="w-12 h-12 opacity-80 group-hover:animate-bounce" />
-            <span className="mt-3 text-sm font-medium">Upload Log File (JSON / plain text)</span>
-            <input className="hidden" type="file" onChange={(e)=> setFile(e.target.files?.[0]||null)} />
+            <span className="mt-3 text-sm font-medium">
+              Upload Log File (JSON / plain text)
+            </span>
+            <input
+              className="hidden"
+              type="file"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+            />
           </label>
 
-          {file && <div className="text-sm">Selected: <strong className="font-mono">{file.name}</strong> — {(file.size/1024).toFixed(1)} KB</div>}
+          {file && (
+            <div className="text-sm">
+              Selected: <strong className="font-mono">{file.name}</strong> —{" "}
+              {(file.size / 1024).toFixed(1)} KB
+            </div>
+          )}
 
-          <div className="grid gap-3">
-            <Button onClick={uploadAndProve} disabled={!file || loading} className="w-full">
+          {/* ACTION BLOCK — THIS IS THE IMPORTANT PART */}
+          <div className="flex flex-col gap-3">
+
+            {/* Run Button */}
+            <Button
+              onClick={uploadAndProve}
+              disabled={!file || loading}
+              className="w-full"
+            >
               {loading ? (
-                <div className="flex items-center gap-2"><RefreshCcw className="animate-spin"/> Processing</div>
+                <div className="flex items-center gap-2">
+                  <RefreshCcw className="animate-spin" />
+                  Processing
+                </div>
               ) : (
-                <div className="flex items-center gap-2"><ShieldCheck/> Run ZK Analysis</div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck />
+                  Run ZK Analysis
+                </div>
               )}
             </Button>
 
+            {/* Progress */}
             <div>
               <ProgressBar progress={progress} />
-              <div className="text-xs text-zinc-400 mt-2">Progress: {progress}%</div>
+              <div className="text-xs text-zinc-400 mt-1">
+                Progress: {progress}%
+              </div>
             </div>
 
-            {merkleRoot && (
-              <div className="mt-2 p-3 rounded bg-white/3">
-                <div className="text-xs text-zinc-300">Merkle Root</div>
-                <div className="font-mono break-all text-sm">{merkleRoot}</div>
-              </div>
-            )}
-
+            {/* Verdict — NOW ALIGNED WITH BUTTON + PROGRESS */}
             {verdict && (
-              <div className="mt-2 p-3 rounded bg-white/3">
+              <div className="rounded-xl border border-white/10 bg-white/3 p-3">
                 <div className="text-sm font-semibold">
                   Verdict:
-                  <span className={`ml-2 ${verdict.compromised ? 'text-rose-400' : 'text-emerald-300'}`}>
-                    {verdict.compromised ? 'Compromised' : 'Clean'}
+                  <span
+                    className={`ml-2 ${
+                      verdict.compromised
+                        ? "text-rose-400"
+                        : "text-emerald-300"
+                    }`}
+                  >
+                    {verdict.compromised ? "Compromised" : "Clean"}
                   </span>
                 </div>
-                <div className="text-xs text-zinc-400 mt-1">
-                  Reason: {verdict.reason || JSON.stringify(verdict)}
+
+                <pre className="text-xs text-zinc-400 mt-2 whitespace-pre-wrap break-all">
+{JSON.stringify(verdict.reason ?? verdict, null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {/* Merkle Root */}
+            {merkleRoot && (
+              <div className="rounded bg-white/3 p-3">
+                <div className="text-xs text-zinc-300">Merkle Root</div>
+                <div className="font-mono text-sm break-all">
+                  {merkleRoot}
                 </div>
               </div>
             )}
 
+            {/* Actions */}
             <div className="flex gap-2">
-              <Button onClick={downloadProof} disabled={!proofBlobUrl}><Download/> Download Proof</Button>
-              <Button variant="ghost" onClick={() => { navigator.clipboard.writeText(merkleRoot || ""); }} disabled={!merkleRoot}>
+              <Button onClick={downloadProof} disabled={!proofBlobUrl}>
+                <Download />
+                Download Proof
+              </Button>
+
+              <Button
+                variant="ghost"
+                disabled={!merkleRoot}
+                onClick={() =>
+                  navigator.clipboard.writeText(merkleRoot || "")
+                }
+              >
                 Copy Root
               </Button>
             </div>
@@ -162,27 +316,32 @@ function AnalyzePanel(props: any) {
         </div>
       </Card>
 
+      {/* RIGHT PANEL — LIVE LOGS */}
       <Card className="p-6">
         <h3 className="font-semibold">Proof Artifacts</h3>
-        <div className="mt-3 text-sm text-zinc-400">When proof generation finishes you'll see download links and public outputs here.</div>
+
+        <div className="mt-3 text-sm text-zinc-400">
+          When proof generation finishes you'll see outputs here.
+        </div>
 
         {proofBlobUrl ? (
           <div className="mt-4 flex items-center justify-between">
-            <div className="font-mono truncate max-w-[60%]">{filename}</div>
+            <div className="font-mono truncate max-w-[60%]">
+              {filename}
+            </div>
             <Button onClick={downloadProof}>Download</Button>
-            <Button variant="ghost" onClick={() => { navigator.clipboard.writeText(proofBlobUrl || ""); }}>
-              Copy Link
-            </Button>
           </div>
         ) : (
-          <div className="mt-4 text-sm text-zinc-400">No proof yet.</div>
+          <div className="mt-4 text-sm text-zinc-400">
+            No proof yet.
+          </div>
         )}
 
         <div className="mt-6">
           <h4 className="font-medium">Live Logs</h4>
           <pre className="mt-2 text-xs bg-black/5 p-3 rounded h-48 overflow-auto">
             {logs.length === 0
-              ? '[task] awaiting input...\n[task] uploaded file queued\n[task] building witness...'
+              ? "[task] awaiting input...\n[task] uploaded file queued\n[task] building witness..."
               : logs.join("\n")}
           </pre>
         </div>
@@ -191,39 +350,84 @@ function AnalyzePanel(props: any) {
   );
 }
 
+
 /* ------------------------------- Verify Panel ------------------------- */
-function VerifyPanel({ verifyFile, setVerifyFile, verifyPublicInput, setVerifyPublicInput, runVerify, verifyResult }: any) {
+/* ------------------------------- Verify Panel ------------------------- */
+function VerifyPanel({
+  verifyFile,
+  setVerifyFile,
+  verifyPublicInput,
+  setVerifyPublicInput,
+  runVerify,
+  verifyResult
+}: any) {
   return (
     <main>
       <Card className="p-6">
-        <div className="grid gap-3">
+        <div className="flex flex-col gap-4">
+
           <h3 className="font-semibold">Verify an External Proof</h3>
 
-          <input type="file" onChange={(e)=> setVerifyFile(e.target.files?.[0]||null)} />
+          {/* Proof upload */}
+          <input
+            type="file"
+            onChange={(e) => setVerifyFile(e.target.files?.[0] || null)}
+          />
 
+          {/* Public inputs */}
           <textarea
             placeholder='Public inputs JSON (optional) — e.g. {"merkle_root":"..."}'
             value={verifyPublicInput}
-            onChange={(e)=> setVerifyPublicInput(e.target.value)}
+            onChange={(e) => setVerifyPublicInput(e.target.value)}
             className="w-full h-32 p-2 rounded bg-white/3"
           />
 
+          {/* Actions */}
           <div className="flex gap-2">
             <Button onClick={runVerify}>Run Verify</Button>
-            <Button variant="ghost" onClick={()=>{ setVerifyFile(null); setVerifyPublicInput(''); }}>Reset</Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setVerifyFile(null);
+                setVerifyPublicInput('');
+              }}
+            >
+              Reset
+            </Button>
           </div>
 
-          {verifyResult && (
-            <div className="mt-3 p-3 rounded bg-white/3">
-              <div className="text-sm font-medium">Result</div>
-              <pre className="text-xs mt-2">{JSON.stringify(verifyResult, null, 2)}</pre>
+          {/* VERDICT + REASONS (FIXED) */}
+          {verifyResult?.verdict && (
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/3 p-4">
+              <div className="text-sm font-semibold">
+                Verdict:
+                <span
+                  className={`ml-2 ${
+                    verifyResult.verdict.compromised
+                      ? 'text-rose-400'
+                      : 'text-emerald-300'
+                  }`}
+                >
+                  {verifyResult.verdict.compromised
+                    ? 'Compromised'
+                    : 'Clean'}
+                </span>
+              </div>
+
+              {verifyResult.verdict.reasons && (
+                <pre className="mt-3 text-xs text-zinc-400 whitespace-pre-wrap break-all">
+{JSON.stringify(verifyResult.verdict.reasons, null, 2)}
+                </pre>
+              )}
             </div>
           )}
+
         </div>
       </Card>
     </main>
   );
 }
+
 
 /* ----------------------------- NEW SETTINGS PANEL -------------------------- */
 function SettingsPanel() {
