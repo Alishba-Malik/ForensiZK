@@ -166,7 +166,6 @@ It is a **prototype**, not a production forensic tool.
 
 ---
 
-
-## 📄 License
+## License
 
 This project is released under the [**MIT License**](https://github.com/Alishba-Malik/ForensiZK/blob/main/LICENSE) for academic and research use.
