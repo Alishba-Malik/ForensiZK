@@ -352,82 +352,38 @@ function AnalyzePanel(props: any) {
 
 
 /* ------------------------------- Verify Panel ------------------------- */
-/* ------------------------------- Verify Panel ------------------------- */
-function VerifyPanel({
-  verifyFile,
-  setVerifyFile,
-  verifyPublicInput,
-  setVerifyPublicInput,
-  runVerify,
-  verifyResult
-}: any) {
+function VerifyPanel({ verifyFile, setVerifyFile, verifyPublicInput, setVerifyPublicInput, runVerify, verifyResult }: any) {
   return (
     <main>
       <Card className="p-6">
-        <div className="flex flex-col gap-4">
-
+        <div className="grid gap-3">
           <h3 className="font-semibold">Verify an External Proof</h3>
 
-          {/* Proof upload */}
-          <input
-            type="file"
-            onChange={(e) => setVerifyFile(e.target.files?.[0] || null)}
-          />
+          <input type="file" onChange={(e)=> setVerifyFile(e.target.files?.[0]||null)} />
 
-          {/* Public inputs */}
           <textarea
             placeholder='Public inputs JSON (optional) — e.g. {"merkle_root":"..."}'
             value={verifyPublicInput}
-            onChange={(e) => setVerifyPublicInput(e.target.value)}
+            onChange={(e)=> setVerifyPublicInput(e.target.value)}
             className="w-full h-32 p-2 rounded bg-white/3"
           />
 
-          {/* Actions */}
           <div className="flex gap-2">
             <Button onClick={runVerify}>Run Verify</Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setVerifyFile(null);
-                setVerifyPublicInput('');
-              }}
-            >
-              Reset
-            </Button>
+            <Button variant="ghost" onClick={()=>{ setVerifyFile(null); setVerifyPublicInput(''); }}>Reset</Button>
           </div>
 
-          {/* VERDICT + REASONS (FIXED) */}
-          {verifyResult?.verdict && (
-            <div className="mt-4 rounded-xl border border-white/10 bg-white/3 p-4">
-              <div className="text-sm font-semibold">
-                Verdict:
-                <span
-                  className={`ml-2 ${
-                    verifyResult.verdict.compromised
-                      ? 'text-rose-400'
-                      : 'text-emerald-300'
-                  }`}
-                >
-                  {verifyResult.verdict.compromised
-                    ? 'Compromised'
-                    : 'Clean'}
-                </span>
-              </div>
-
-              {verifyResult.verdict.reasons && (
-                <pre className="mt-3 text-xs text-zinc-400 whitespace-pre-wrap break-all">
-{JSON.stringify(verifyResult.verdict.reasons, null, 2)}
-                </pre>
-              )}
+          {verifyResult && (
+            <div className="mt-3 p-3 rounded bg-white/3">
+              <div className="text-sm font-medium">Result</div>
+              <pre className="text-xs mt-2">{JSON.stringify(verifyResult, null, 2)}</pre>
             </div>
           )}
-
         </div>
       </Card>
     </main>
   );
 }
-
 
 /* ----------------------------- NEW SETTINGS PANEL -------------------------- */
 function SettingsPanel() {
